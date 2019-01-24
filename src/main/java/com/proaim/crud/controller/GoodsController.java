@@ -105,7 +105,7 @@ public class GoodsController {
             // https://github.com/blueimp/jQuery-File-Upload 图片上传组件
 
         } catch (Exception e) {
-            /*throw new RuntimeException("服务器繁忙，上传图片失败");*/
+            throw new RuntimeException("服务器繁忙，上传图片失败");
         }
 
     }
