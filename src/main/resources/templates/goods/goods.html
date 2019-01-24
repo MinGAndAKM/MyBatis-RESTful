@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>商品添加/编辑</title>
+    <script src="/static/asserts/js/jquery-3.3.1.js"></script>
+    <script src="/static/asserts/js/jquery.form.js"></script>
+    <script>
+        function uploadPic() {
+            // 上传设置
+            var options = {
+                // 规定把请求发送到那个URL
+                url: "/uploadPic",
+                // 请求方式
+                type: "post",
+                // 服务器响应的数据类型
+                dataType: "json",
+                // 请求成功时执行的回调函数
+                success: function (data) {
+                    // 图片显示地址
+                    alert(data.path);
+                    $('#imageUrl').attr("src", data.path);
+                }
+            };
+
+            $('#goodsForm').ajaxSubmit(options);
+        }
+    </script>
+</head>
+<body>
+<label>菜单栏：</label>
+<table width="100%" border="1">
+    <tr>
+        <td>
+            <input type="button" value="首页" onclick="window.location.href='/'">
+            <input type="button" value="添加" onclick="window.location.href='/create.html'">
+        </td>
+    </tr>
+</table>
+<form th:action="@{/goods}" id="goodsForm" enctype="multipart/form-data" method="post">
+    <input type="hidden" name="_method" value="put" th:if="${goods!=null}">
+    <input type="hidden" name="id" th:if="${goods!=null}" th:value="${goods.id}">
+
+    <label>添加商品</label>
+    <table width="100%" border=1>
+        <tr>
+            <td>商品名称</td>
+            <td><input type="text" name="goods.name" class="form-control" placeholder="Name"
+                       th:value="${goods!=null}?${goods.name}"></td>
+        </tr>
+        <tr>
+            <td>商品价格</td>
+            <td><input type="text" name="goods.price" th:value="${goods!=null}?${goods.price}"></td>
+        </tr>
+        <tr>
+            <td>商品生产日期</td>
+            <td><input type="date" name="goods.createtime"
+                       th:value="${goods!=null}?${#dates.format(goods.createtime,'yyyy-MM-dd')}"></td>
+        </tr>
+        <tr>
+            <td>商品简介</td>
+            <td><textarea name="goods.remark" cols="30" rows="5" th:text="${goods!=null}?${goods.remark}"></textarea>
+            </td>
+        </tr>
+        <tr th:if="${goods!=null}">
+            <td>原始图片</td>
+            <td><img th:src="@{/src/main/resources/static/images/}+${goods.picfile}" alt="image" style="width: 200px">
+        </tr>
+        <tr th:if="${goods!=null}">
+            <td>预览图片</td>
+            <td><img width="100" height="100" id="imageUrl"></td>
+        </tr>
+        <tr>
+            <td>商品图片</td>
+            <td><input type="file" id="picfile" onchange="uploadPic()" name="picfile"></td>
+        </tr>
+        <tr>
+            <td>状态</td>
+            <td><input type="text" name="goods.status" th:value="${goods!=null}?${goods.status}"></td>
+        </tr>
+        <tr>
+            <td colspan="2" align="center"><input type="submit" value="提交"></td>
+        </tr>
+    </table>
+</form>
+</body>
+</html>

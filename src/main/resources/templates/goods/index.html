@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>商品列表</title>
+</head>
+<script src="/static/asserts/js/jquery-3.3.1.js"></script>
+<body>
+<label>菜单栏：</label>
+<table width="100%" border="1">
+    <tr>
+        <td>
+            <form th:action="@{/goods}" method="post">
+                <input type="hidden" name="_method" value="get" th:if="${goods!=null}">
+                <input type="submit" value="批量修改(未完成)">
+            </form>
+            <input type="button" value="添加" onclick="window.location.href='/create.html'">
+        </td>
+    </tr>
+</table>
+
+<label>商品列表：</label>
+<table width="100%" border=1>
+    <tr>
+        <td>选择</td>
+        <td>商品名称</td>
+        <td>商品价格</td>
+        <td>生产日期</td>
+        <td>商品描述</td>
+        <td>状态</td>
+        <td>操作</td>
+    </tr>
+    <tr th:each="goods:${goods}">
+        <td><input type="checkbox" th:value="${goods.id}" th:name="${goodsStat.index}"></td>
+        <td><input type="text" th:value="${goods.name}"></td>
+        <td><input type="text" th:value="${goods.price}"></td>
+        <td><input type="date" th:value="${#dates.format(goods.createtime,'yyyy-MM-dd')}"></td>
+        <td><input type="text" th:value="${goods.remark}"></td>
+        <td><input type="text" th:value="${goods.status}"></td>
+
+        <td>
+            <!-- 被隐藏的段落 -->
+            <input type="hidden" th:value="${goods.id}">
+            <form th:action="@{/goods/}+${goods.id}" method="post">
+                <input type="hidden" name="_method" value="delete" th:if="${goods!=null}">
+                <input type="submit" value="删除">
+            </form>
+
+            <form th:action="@{/goods/}+${goods.id}" method="post">
+                <input type="hidden" name="_method" value="put" th:if="${goods!=null}">
+                <input type="submit" value="修改">
+            </form>
+        </td>
+    </tr>
+</table>
+</body>
+</html>
